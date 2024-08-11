@@ -50,17 +50,17 @@ public class AgentManager : MonoBehaviour
 
     // METHODS
 
-    void Spawn()
+    void Spawn(EventBase eventBase)
     {
         Agent agent = agentPool.Get();
-        agent.SetParent(cachedTransform);
         SpawnedAgentEvent.SpawnedAgent = agent;
         EventManager.Instance.TriggerEvent(SpawnedAgentEvent);
     }
 
-    void OnAgentReleased(Agent agentToRelease)
+    void OnAgentReleased(EventBase eventBase)
     {
-        agentPool.Release(agentToRelease);
+        ReleaseAgentEvent releaseAgentEvent = eventBase as ReleaseAgentEvent;
+        agentPool.Release(releaseAgentEvent.ReleasedAgent);
     }
 
     Agent Pool_Spawn()

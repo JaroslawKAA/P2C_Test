@@ -1,17 +1,8 @@
 using System;
 
-public class SpawnedAgentEventListener : IEventListener
+public class SpawnedAgentEventListener : EventListener
 {
-    Action<Agent> agentSpawnedAction;
-    
-    public SpawnedAgentEventListener(Action<Agent> agentSpawnedAction)
+    public SpawnedAgentEventListener(Action<EventBase> onEventInvoked) : base(onEventInvoked)
     {
-        this.agentSpawnedAction = agentSpawnedAction;
-    }
-    
-    public void OnEvent(EventBase eventInstance)
-    {
-        SpawnedAgentEvent spawnedAgentEvent = eventInstance as SpawnedAgentEvent;
-        agentSpawnedAction?.Invoke(spawnedAgentEvent.SpawnedAgent);
     }
 }

@@ -8,47 +8,43 @@ public class AgentService : MonoBehaviour, IAgentService
     // PRIVATE
     Dictionary<Guid, Agent> agents = new();
 
-    SpawnAgentEvent SpawnAgentEvent = new();
-    ReleaseAgentEvent ReleaseAgentEvent = new();
-
-    SpawnedAgentEventListener SpawnedAgentEventListener;
+    SpawnedAgentEventListener spawnedAgentEventListener;
 
     // UNITY EVENT
     void Awake()
     {
-        SpawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
-        EventManager.Instance.RegisterListener<SpawnedAgentEvent>(SpawnedAgentEventListener);
+        spawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
+        EventManager.Instance.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
     }
-
 
     void OnDestroy()
     {
-        EventManager.Instance.UnregisterListener<SpawnedAgentEvent>(SpawnedAgentEventListener);
+        EventManager.Instance.UnregisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
 
-        SpawnAgentEvent = null;
-        SpawnedAgentEventListener = null;
+        spawnedAgentEventListener = null;
     }
 
     // METHODS
-    public void SpawnAgent() => EventManager.Instance.TriggerEvent(SpawnAgentEvent);
-    
+    public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
+
     public void ReleaseAgent(Agent agentInstance)
     {
         if (agents.ContainsKey(agentInstance.GUID))
         {
-            ReleaseAgentEvent.ReleasedAgent = agentInstance;
-            EventManager.Instance.TriggerEvent(ReleaseAgentEvent);
+            EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentInstance));
 
             agents.Remove(agentInstance.GUID);
         }
     }
 
+    public void SpawnAgents(int count)
+    {
+        for (int i = 0; i < count; i++) SpawnAgent();
+    }
+
     public void ReleaseAgents()
     {
-        foreach (Agent agent in agents.Values.ToArray())
-        {
-            ReleaseAgent(agent);
-        }
+        foreach (Agent agent in agents.Values.ToArray()) ReleaseAgent(agent);
     }
 
     void RegisterAgent(Agent agentInstance)
@@ -56,5 +52,11 @@ public class AgentService : MonoBehaviour, IAgentService
         agents.Add(agentInstance.GUID, agentInstance);
     }
 
-    void OnAgentSpawned(Agent agentInstance) => RegisterAgent(agentInstance);
+    void OnAgentSpawned(EventBase eventBase)
+    {
+        SpawnedAgentEvent spawnedAgentEvent = eventBase as SpawnedAgentEvent;
+        RegisterAgent(spawnedAgentEvent.SpawnedAgent);
+        
+        EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+    }
 }

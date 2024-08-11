@@ -1,17 +1,8 @@
 using System;
 
-public class ReleaseAgentEventListener : IEventListener
+public class ReleaseAgentEventListener : EventListener
 {
-    Action<Agent> onAgentRelease;
-
-    public ReleaseAgentEventListener(Action<Agent> onAgentRelease)
+    public ReleaseAgentEventListener(Action<EventBase> onEventInvoked) : base(onEventInvoked)
     {
-        this.onAgentRelease = onAgentRelease;
-    }
-    
-    public void OnEvent(EventBase eventInstance)
-    {
-        ReleaseAgentEvent releaseAgentEvent = eventInstance as ReleaseAgentEvent;
-        onAgentRelease?.Invoke(releaseAgentEvent.ReleasedAgent);
     }
 }

@@ -22,19 +22,19 @@ public class EventManager : MonoBehaviour
         }
     }
     
-    Dictionary<Type, List<IEventListener>> eventListeners = new();
+    Dictionary<Type, List<EventListener>> eventListeners = new();
 
-    public void RegisterListener<T>(IEventListener listener) where T : EventBase
+    public void RegisterListener<T>(EventListener listener) where T : EventBase
     {
         Type eventType = typeof(T);
         if (!eventListeners.ContainsKey(eventType))
         {
-            eventListeners[eventType] = new List<IEventListener>();
+            eventListeners[eventType] = new List<EventListener>();
         }
         eventListeners[eventType].Add(listener);
     }
 
-    public void UnregisterListener<T>(IEventListener listener) where T : EventBase
+    public void UnregisterListener<T>(EventListener listener) where T : EventBase
     {
         Type eventType = typeof(T);
         if (eventListeners.ContainsKey(eventType))
@@ -48,7 +48,7 @@ public class EventManager : MonoBehaviour
         Type eventType = typeof(T);
         if (eventListeners.ContainsKey(eventType))
         {
-            foreach (IEventListener listener in eventListeners[eventType])
+            foreach (EventListener listener in eventListeners[eventType])
             {
                 listener.OnEvent(eventInstance);
             }

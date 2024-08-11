@@ -19,18 +19,8 @@ public class GameManager : SerializedMonoBehaviour
     }
     
     // METHODS
-    [Button]
-    void SpawnAgents()
-    {
-        for (int i = 0; i < agentsToSpawn; i++)
-        {
-            agentService.SpawnAgent();
-        }
-    }
-
-    [Button]
-    void ReleaseAgents()
-    {
-        agentService.ReleaseAgents();
-    }
+    [Button] void SpawnAgent() => agentService.SpawnAgent();
+    [Button] void RealiseAgent(Agent agent) => agentService.ReleaseAgent(agent);
+    [Button] void SpawnAgents() => agentService.SpawnAgents(agentsToSpawn);
+    [Button] void ReleaseAgents() => agentService.ReleaseAgents();
 }
