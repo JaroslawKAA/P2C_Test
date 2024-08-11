@@ -1,10 +1,12 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class AgentManager : MonoBehaviour
 {
     // SERIALIZED
-    [SerializeField] Agent agentPrefab;
+    [Title("Depend")]
+    [SerializeField] [Required] Agent agentPrefab;
 
     // PRIVATE
     SpawnedAgentEvent SpawnedAgentEvent = new();

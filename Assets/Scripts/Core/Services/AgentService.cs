@@ -6,9 +6,9 @@ public class AgentService : MonoBehaviour, IAgentService
 {
     // PRIVATE
     Dictionary<Guid, Agent> agents = new();
-    
+
     SpawnAgentEvent SpawnAgentEvent = new();
-    ReleaseAgentEvent ReleaseAgentEvent = new ();
+    ReleaseAgentEvent ReleaseAgentEvent = new();
 
     SpawnedAgentEventListener SpawnedAgentEventListener;
 
@@ -18,6 +18,7 @@ public class AgentService : MonoBehaviour, IAgentService
         SpawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
         EventManager.Instance.RegisterListener<SpawnedAgentEvent>(SpawnedAgentEventListener);
     }
+
 
     void OnDestroy()
     {
@@ -36,7 +37,7 @@ public class AgentService : MonoBehaviour, IAgentService
         {
             ReleaseAgentEvent.ReleasedAgent = agentInstance;
             EventManager.Instance.TriggerEvent(ReleaseAgentEvent);
-            
+
             agents.Remove(agentInstance.GUID);
         }
     }
