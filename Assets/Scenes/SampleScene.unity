@@ -565,6 +565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 640873531}
+  - component: {fileID: 640873532}
   m_Layer: 0
   m_Name: IAgentService
   m_TagString: Untagged
@@ -587,6 +588,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 939798607}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &640873532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640873530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c7cc76aded4664198319965195091f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &702482029
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,6 +609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 702482030}
+  - component: {fileID: 702482031}
   m_Layer: 0
   m_Name: ITickService
   m_TagString: Untagged
@@ -618,6 +632,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 939798607}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &702482031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702482029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c0f4e9255facf46aabd75e0a700a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &826273953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -795,6 +821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 939798607}
+  - component: {fileID: 939798608}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -819,6 +846,18 @@ Transform:
   - {fileID: 702482030}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &939798608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939798606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11f1df07f64e6f4458ddd6d88d4ee517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1105537644
 PrefabInstance:
   m_ObjectHideFlags: 0
