@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AgentService : MonoBehaviour, IAgentService
@@ -30,7 +31,7 @@ public class AgentService : MonoBehaviour, IAgentService
 
     // METHODS
     public void SpawnAgent() => EventManager.Instance.TriggerEvent(SpawnAgentEvent);
-
+    
     public void ReleaseAgent(Agent agentInstance)
     {
         if (agents.ContainsKey(agentInstance.GUID))
@@ -39,6 +40,14 @@ public class AgentService : MonoBehaviour, IAgentService
             EventManager.Instance.TriggerEvent(ReleaseAgentEvent);
 
             agents.Remove(agentInstance.GUID);
+        }
+    }
+
+    public void ReleaseAgents()
+    {
+        foreach (Agent agent in agents.Values.ToArray())
+        {
+            ReleaseAgent(agent);
         }
     }
 
