@@ -1,5 +1,5 @@
+using Core.Services;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
 public class GameManager : SerializedMonoBehaviour
@@ -7,17 +7,20 @@ public class GameManager : SerializedMonoBehaviour
     // SERIALIZED
     [Title("Config")]
     [SerializeField] int agentsToSpawn = 10;
-    
-    [Title("Services")]
-    [OdinSerialize] [Required] IAgentService agentService;
-    [OdinSerialize] [Required] ITickService tickService;
+
+    // PRIVATE
+    IAgentService agentService;
+    ITickService tickService;
 
     // UNITY EVENTS
     void Start()
     {
+        agentService = new AgentService();
+        tickService = new TickService();
+        
         SpawnAgents();
     }
-    
+
     // METHODS
     [Button] void SpawnAgent() => agentService.SpawnAgent();
     [Button] void RealiseAgent(Agent agent) => agentService.ReleaseAgent(agent);

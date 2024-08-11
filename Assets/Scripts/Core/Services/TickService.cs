@@ -1,10 +1,10 @@
-
-using UnityEngine;
-
-public class TickService : MonoBehaviour, ITickService
+namespace Core.Services
 {
-    public void Tick()
+    public class TickService : ITickService
     {
-        throw new System.NotImplementedException();
+        public void Tick()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

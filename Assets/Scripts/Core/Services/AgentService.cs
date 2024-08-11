@@ -1,62 +1,64 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class AgentService : MonoBehaviour, IAgentService
+namespace Core.Services
 {
-    // PRIVATE
-    Dictionary<Guid, Agent> agents = new();
-
-    SpawnedAgentEventListener spawnedAgentEventListener;
-
-    // UNITY EVENT
-    void Awake()
+    public class AgentService : IAgentService
     {
-        spawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
-        EventManager.Instance.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
-    }
+        // PRIVATE
+        Dictionary<Guid, Agent> agents = new();
 
-    void OnDestroy()
-    {
-        EventManager.Instance.UnregisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
+        SpawnedAgentEventListener spawnedAgentEventListener;
 
-        spawnedAgentEventListener = null;
-    }
-
-    // METHODS
-    public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
-
-    public void ReleaseAgent(Agent agentInstance)
-    {
-        if (agents.ContainsKey(agentInstance.GUID))
+        public AgentService()
         {
-            EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentInstance));
-
-            agents.Remove(agentInstance.GUID);
+            spawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
+            EventManager.Instance.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
         }
-    }
 
-    public void SpawnAgents(int count)
-    {
-        for (int i = 0; i < count; i++) SpawnAgent();
-    }
+        ~AgentService()
+        {
+            EventManager.Instance.UnregisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
 
-    public void ReleaseAgents()
-    {
-        foreach (Agent agent in agents.Values.ToArray()) ReleaseAgent(agent);
-    }
-
-    void RegisterAgent(Agent agentInstance)
-    {
-        agents.Add(agentInstance.GUID, agentInstance);
-    }
-
-    void OnAgentSpawned(EventBase eventBase)
-    {
-        SpawnedAgentEvent spawnedAgentEvent = eventBase as SpawnedAgentEvent;
-        RegisterAgent(spawnedAgentEvent.SpawnedAgent);
+            spawnedAgentEventListener = null;
+        }
         
-        EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+        // METHODS
+        public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
+
+        public void ReleaseAgent(Agent agentInstance)
+        {
+            if (agents.ContainsKey(agentInstance.GUID))
+            {
+                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentInstance));
+
+                agents.Remove(agentInstance.GUID);
+                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+            }
+        }
+
+        public void SpawnAgents(int count)
+        {
+            for (int i = 0; i < count; i++) SpawnAgent();
+        }
+
+        public void ReleaseAgents()
+        {
+            foreach (Agent agent in agents.Values.ToArray()) ReleaseAgent(agent);
+        }
+
+        void RegisterAgent(Agent agentInstance)
+        {
+            agents.Add(agentInstance.GUID, agentInstance);
+        }
+
+        void OnAgentSpawned(EventBase eventBase)
+        {
+            SpawnedAgentEvent spawnedAgentEvent = eventBase as SpawnedAgentEvent;
+            RegisterAgent(spawnedAgentEvent.SpawnedAgent);
+            
+            EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+        }
     }
 }

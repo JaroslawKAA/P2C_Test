@@ -9,8 +9,6 @@ public class AgentManager : MonoBehaviour
     [SerializeField] [Required] Agent agentPrefab;
 
     // PRIVATE
-    SpawnedAgentEvent SpawnedAgentEvent = new();
-
     SpawnAgentEventListener SpawnAgentEventListener;
     ReleaseAgentEventListener ReleaseAgentEventListener;
 
@@ -49,12 +47,10 @@ public class AgentManager : MonoBehaviour
 
 
     // METHODS
-
     void Spawn(EventBase eventBase)
     {
         Agent agent = agentPool.Get();
-        SpawnedAgentEvent.SpawnedAgent = agent;
-        EventManager.Instance.TriggerEvent(SpawnedAgentEvent);
+        EventManager.Instance.TriggerEvent(new SpawnedAgentEvent(agent));
     }
 
     void OnAgentReleased(EventBase eventBase)
@@ -70,7 +66,12 @@ public class AgentManager : MonoBehaviour
         return agentInstance;
     }
 
-    void Pool_OnGet(Agent agent) => agent.OnGet();
+    void Pool_OnGet(Agent agent)
+    {
+        agent.OnGet();
+        agent.SetParent(cachedTransform);
+    }
+
     void Pool_OnRelease(Agent agent)
     {
         agent.OnRelease();
