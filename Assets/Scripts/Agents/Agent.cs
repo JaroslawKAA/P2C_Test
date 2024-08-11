@@ -1,16 +1,31 @@
+using System;
 using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    Transform cachedTransform;
+    
+    public Guid GUID { get; private set; }
+
+    void Awake()
     {
-        
+        cachedTransform = transform;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDestroy()
     {
-        
+        cachedTransform = null;
+    }
+
+    public void OnInstantiated()
+    {
+        GUID = Guid.NewGuid();
+    }
+
+    public void SetTransform(Vector3 position, Quaternion rotation, Transform parent = null)
+    {
+        cachedTransform.position = position;
+        cachedTransform.rotation = rotation;
+        cachedTransform.parent = null;
     }
 }
