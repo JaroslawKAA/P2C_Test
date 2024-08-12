@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeScaleService : MonoBehaviour
+public class TimeScaleService : ITimeScaleService
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public void SetTimeScale(float timeScale) => Time.timeScale = timeScale;
+    public float GetTimeScale() => Time.timeScale;
 }

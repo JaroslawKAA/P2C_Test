@@ -8,6 +8,7 @@ public class GameManager : SerializedMonoBehaviour
     // PRIVATE
     IAgentService agentService;
     ITickService tickService;
+    ITimeScaleService timeScaleService;
 
     EventListener addAgentRequestEventListener;
     EventListener removeAgentRequestEventListener;
@@ -18,6 +19,7 @@ public class GameManager : SerializedMonoBehaviour
     {
         agentService = new AgentService();
         tickService = new TickService();
+        timeScaleService = new TimeScaleService();
         
         addAgentRequestEventListener = new EventListener(OnAddAgentRequest);
         EventManager.Instance.RegisterListener<AddAgentRequestEvent>(addAgentRequestEventListener);
