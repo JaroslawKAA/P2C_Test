@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 
 namespace Core.Services
 {
@@ -9,11 +10,14 @@ namespace Core.Services
         // PRIVATE
         Dictionary<Guid, Agent> agents = new();
 
-        SpawnedAgentEventListener spawnedAgentEventListener;
+        Random random = new();
 
+        EventListener spawnedAgentEventListener;
+
+        // CTORs
         public AgentService()
         {
-            spawnedAgentEventListener = new SpawnedAgentEventListener(OnAgentSpawned);
+            spawnedAgentEventListener = new EventListener(OnAgentSpawned);
             EventManager.Instance.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
         }
 
@@ -23,10 +27,12 @@ namespace Core.Services
 
             spawnedAgentEventListener = null;
         }
-        
+
         // METHODS
+        [Button]
         public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
 
+        [Button]
         public void ReleaseAgent(Agent agentInstance)
         {
             if (agents.ContainsKey(agentInstance.GUID))
@@ -38,11 +44,25 @@ namespace Core.Services
             }
         }
 
+        [Button]
+        public void ReleaseRandomAgent()
+        {
+            if(agents.Count > 0)
+            {
+                Agent randomAgent = agents.ElementAt(random.Next(agents.Count)).Value;
+                agents.Remove(randomAgent.GUID);
+                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(randomAgent));
+                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+            }
+        }
+
+        [Button]
         public void SpawnAgents(int count)
         {
             for (int i = 0; i < count; i++) SpawnAgent();
         }
 
+        [Button]
         public void ReleaseAgents()
         {
             foreach (Agent agent in agents.Values.ToArray()) ReleaseAgent(agent);

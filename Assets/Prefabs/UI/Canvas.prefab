@@ -1271,7 +1271,7 @@ PrefabInstance:
     - target: {fileID: 4903666046726358985, guid: 7e207d2e446cbac42bcdcaa5918f4aa8,
         type: 3}
       propertyPath: m_text
-      value: 'Agents count: output'
+      value: 'Agents count: 0'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

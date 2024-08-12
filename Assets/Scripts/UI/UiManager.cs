@@ -21,7 +21,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] [Required] TMP_Text messagesText;
     
     // PRIVATE
-    AgentsCountChangedEventListener agentsCountChangedEventListener;
+    EventListener agentsCountChangedEventListener;
     
     // UNITY EVENTS
     void Awake()
@@ -39,7 +39,7 @@ public class UiManager : MonoBehaviour
     // METHODS
     void SubscribeGameEvents()
     {
-        agentsCountChangedEventListener = new AgentsCountChangedEventListener(OnAgentsCountChanged);
+        agentsCountChangedEventListener = new EventListener(OnAgentsCountChanged);
         EventManager.Instance.RegisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
     }
 
@@ -74,20 +74,9 @@ public class UiManager : MonoBehaviour
         agentsCountText.SetOutput(agentsCountChangedEvent.AgentsCount.ToString());
     }
 
-    void AddAgent()
-    {
-        throw new NotImplementedException();
-    }
-
-    void RemoveRandomAgent()
-    {
-        throw new NotImplementedException();
-    }
-    
-    void ClearAllAgents()
-    {
-        throw new NotImplementedException();
-    }
+    void AddAgent() => EventManager.Instance.TriggerEvent(new AddAgentRequestEvent());
+    void RemoveRandomAgent() => EventManager.Instance.TriggerEvent(new RemoveAgentRequestEvent());
+    void ClearAllAgents() => EventManager.Instance.TriggerEvent(new ClearAllAgentsRequestEvent());
 
     void SpeedUp()
     {
@@ -101,8 +90,6 @@ public class UiManager : MonoBehaviour
 
     void Pause()
     {
-        
+        throw new NotImplementedException();
     }
-
-    
 }

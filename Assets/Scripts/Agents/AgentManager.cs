@@ -9,8 +9,8 @@ public class AgentManager : MonoBehaviour
     [SerializeField] [Required] Agent agentPrefab;
 
     // PRIVATE
-    SpawnAgentEventListener SpawnAgentEventListener;
-    ReleaseAgentEventListener ReleaseAgentEventListener;
+    EventListener SpawnAgentEventListener;
+    EventListener ReleaseAgentEventListener;
 
     LinkedPool<Agent> agentPool;
 
@@ -24,8 +24,8 @@ public class AgentManager : MonoBehaviour
         
         agentPool = new LinkedPool<Agent>(createFunc: Pool_Spawn, actionOnGet: Pool_OnGet, actionOnRelease: Pool_OnRelease);
 
-        SpawnAgentEventListener = new SpawnAgentEventListener(Spawn);
-        ReleaseAgentEventListener = new ReleaseAgentEventListener(OnAgentReleased);
+        SpawnAgentEventListener = new EventListener(Spawn);
+        ReleaseAgentEventListener = new EventListener(OnAgentReleased);
 
         EventManager.Instance.RegisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
         EventManager.Instance.RegisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
