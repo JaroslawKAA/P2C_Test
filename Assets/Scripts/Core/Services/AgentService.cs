@@ -8,7 +8,7 @@ namespace Core.Services
     public class AgentService : IAgentService
     {
         // PRIVATE
-        Dictionary<Guid, Agent> agents = new();
+        LinkedList<Guid> agents = new();
 
         Random random = new();
 
@@ -33,13 +33,13 @@ namespace Core.Services
         public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
 
         [Button]
-        public void ReleaseAgent(Agent agentInstance)
+        public void ReleaseAgent(Guid agentGuid)
         {
-            if (agents.ContainsKey(agentInstance.GUID))
+            if (agents.Contains(agentGuid))
             {
-                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentInstance));
+                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentGuid));
 
-                agents.Remove(agentInstance.GUID);
+                agents.Remove(agentGuid);
                 EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
             }
         }
@@ -49,8 +49,8 @@ namespace Core.Services
         {
             if(agents.Count > 0)
             {
-                Agent randomAgent = agents.ElementAt(random.Next(agents.Count)).Value;
-                agents.Remove(randomAgent.GUID);
+                Guid randomAgent = agents.ElementAt(random.Next(agents.Count));
+                agents.Remove(randomAgent);
                 EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(randomAgent));
                 EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
             }
@@ -65,12 +65,17 @@ namespace Core.Services
         [Button]
         public void ReleaseAgents()
         {
-            foreach (Agent agent in agents.Values.ToArray()) ReleaseAgent(agent);
+            while (agents.Count > 0)
+            {
+                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agents.Last.Value));
+                agents.RemoveLast();
+                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+            }
         }
 
-        void RegisterAgent(Agent agentInstance)
+        void RegisterAgent(Guid agentGuid)
         {
-            agents.Add(agentInstance.GUID, agentInstance);
+            agents.AddFirst(agentGuid);
         }
 
         void OnAgentSpawned(EventBase eventBase)
