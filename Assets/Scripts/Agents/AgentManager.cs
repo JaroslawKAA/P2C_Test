@@ -34,8 +34,8 @@ namespace Agents
             SpawnAgentEventListener = new EventListener(Spawn);
             ReleaseAgentEventListener = new EventListener(OnAgentReleased);
 
-            EventManager.Instance.RegisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
-            EventManager.Instance.RegisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
+            EventManager.RegisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
+            EventManager.RegisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
         }
 
         void OnDestroy()
@@ -43,8 +43,8 @@ namespace Agents
             agentPool.Clear();
             agentPool = null;
         
-            EventManager.Instance.UnregisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
-            EventManager.Instance.UnregisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
+            EventManager.UnregisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
+            EventManager.UnregisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
 
             SpawnAgentEventListener = null;
             ReleaseAgentEventListener = null;
@@ -57,7 +57,7 @@ namespace Agents
         void Spawn(EventBase eventBase)
         {
             Agent agent = agentPool.Get();
-            EventManager.Instance.TriggerEvent(new SpawnedAgentEvent(agent.GUID));
+            EventManager.TriggerEvent(new SpawnedAgentEvent(agent.GUID));
         }
 
         void OnAgentReleased(EventBase eventBase)

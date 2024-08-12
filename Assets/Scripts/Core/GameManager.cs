@@ -6,11 +6,12 @@ using UnityEngine;
 
 namespace Core
 {
-    public class GameManager : SerializedMonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         // SERIALIZED
         [Title("Config")]
         [SerializeField] float timeScaleAdd = .25f;
+        [SerializeField] float tickDelay = .1f;
 
         // PRIVATE
         IAgentService agentService;
@@ -28,33 +29,33 @@ namespace Core
         void Start()
         {
             agentService = new AgentService();
-            tickService = new TickService();
+            tickService = new TickService(tickDelay);
             timeScaleService = new TimeScaleService();
         
             addAgentRequestEventListener = new EventListener(OnAddAgentRequest);
-            EventManager.Instance.RegisterListener<AddAgentRequestEvent>(addAgentRequestEventListener);
+            EventManager.RegisterListener<AddAgentRequestEvent>(addAgentRequestEventListener);
 
             removeAgentRequestEventListener = new EventListener(OnRemoveAgentRequest);
-            EventManager.Instance.RegisterListener<RemoveAgentRequestEvent>(removeAgentRequestEventListener);
+            EventManager.RegisterListener<RemoveAgentRequestEvent>(removeAgentRequestEventListener);
 
             clearAllAgentsRequestEventListener = new EventListener(OnClearAllAgentRequest);
-            EventManager.Instance.RegisterListener<ClearAllAgentsRequestEvent>(clearAllAgentsRequestEventListener);
+            EventManager.RegisterListener<ClearAllAgentsRequestEvent>(clearAllAgentsRequestEventListener);
 
             increaseTimeScaleEventListener = new EventListener(OnIncreaseTimeScaleRequest);
-            EventManager.Instance.RegisterListener<IncreaseTimeScaleEvent>(increaseTimeScaleEventListener);
+            EventManager.RegisterListener<IncreaseTimeScaleEvent>(increaseTimeScaleEventListener);
 
             decreaseTimeScaleEventListener = new EventListener(OnDecreaseTimeScaleRequest);
-            EventManager.Instance.RegisterListener<DecreaseTimeScaleEvent>(decreaseTimeScaleEventListener);
+            EventManager.RegisterListener<DecreaseTimeScaleEvent>(decreaseTimeScaleEventListener);
 
             pauseGameEventListener = new EventListener(OnPauseRequest);
-            EventManager.Instance.RegisterListener<PauseGameEvent>(pauseGameEventListener);
+            EventManager.RegisterListener<PauseGameEvent>(pauseGameEventListener);
         }
         
         void OnDestroy()
         {
-            EventManager.Instance.UnregisterListener<AddAgentRequestEvent>(addAgentRequestEventListener);
-            EventManager.Instance.UnregisterListener<RemoveAgentRequestEvent>(removeAgentRequestEventListener);
-            EventManager.Instance.UnregisterListener<ClearAllAgentsRequestEvent>(clearAllAgentsRequestEventListener);
+            EventManager.UnregisterListener<AddAgentRequestEvent>(addAgentRequestEventListener);
+            EventManager.UnregisterListener<RemoveAgentRequestEvent>(removeAgentRequestEventListener);
+            EventManager.UnregisterListener<ClearAllAgentsRequestEvent>(clearAllAgentsRequestEventListener);
         }
 
         // METHODS

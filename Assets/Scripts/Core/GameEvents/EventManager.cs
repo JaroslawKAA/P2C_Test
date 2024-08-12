@@ -1,32 +1,13 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Core.GameEvents
 {
-    public class EventManager : MonoBehaviour
+    public static class EventManager
     {
-        static EventManager instance;
-        public static EventManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<EventManager>();
-                    if (instance == null)
-                    {
-                        GameObject obj = new GameObject("EventManager");
-                        instance = obj.AddComponent<EventManager>();
-                    }
-                }
-                return instance;
-            }
-        }
-    
-        Dictionary<Type, List<EventListener>> eventListeners = new();
+        static Dictionary<Type, List<EventListener>> eventListeners = new();
 
-        public void RegisterListener<T>(EventListener listener) where T : EventBase
+        public static void RegisterListener<T>(EventListener listener) where T : EventBase
         {
             Type eventType = typeof(T);
             if (!eventListeners.ContainsKey(eventType))
@@ -36,7 +17,7 @@ namespace Core.GameEvents
             eventListeners[eventType].Add(listener);
         }
 
-        public void UnregisterListener<T>(EventListener listener) where T : EventBase
+        public static void UnregisterListener<T>(EventListener listener) where T : EventBase
         {
             Type eventType = typeof(T);
             if (eventListeners.ContainsKey(eventType))
@@ -45,7 +26,7 @@ namespace Core.GameEvents
             }
         }
 
-        public void TriggerEvent<T>(T eventInstance) where T : EventBase
+        public static void TriggerEvent<T>(T eventInstance) where T : EventBase
         {
             Type eventType = typeof(T);
             if (eventListeners.ContainsKey(eventType))

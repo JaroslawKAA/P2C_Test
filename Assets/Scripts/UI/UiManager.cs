@@ -44,16 +44,16 @@ namespace UI
         void SubscribeGameEvents()
         {
             agentsCountChangedEventListener = new EventListener(OnAgentsCountChanged);
-            EventManager.Instance.RegisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
+            EventManager.RegisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
 
             timeScaleChangedEventListener = new EventListener(OnTimeScaleChanged);
-            EventManager.Instance.RegisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
+            EventManager.RegisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
         }
 
         void UnsubscribeGameEvents()
         {
-            EventManager.Instance.UnregisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
-            EventManager.Instance.UnregisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
+            EventManager.UnregisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
+            EventManager.UnregisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
         }
 
         void SubscribeButtons()
@@ -88,11 +88,11 @@ namespace UI
             gameSpeedText.SetOutput(timeScaleChangedEvent.TimeScale.ToString());
         }
 
-        void AddAgent() => EventManager.Instance.TriggerEvent(new AddAgentRequestEvent());
-        void RemoveRandomAgent() => EventManager.Instance.TriggerEvent(new RemoveAgentRequestEvent());
-        void ClearAllAgents() => EventManager.Instance.TriggerEvent(new ClearAllAgentsRequestEvent());
-        void SpeedUp() => EventManager.Instance.TriggerEvent(new IncreaseTimeScaleEvent());
-        void SpeedDown() => EventManager.Instance.TriggerEvent(new DecreaseTimeScaleEvent());
-        void Pause() => EventManager.Instance.TriggerEvent(new PauseGameEvent());
+        void AddAgent() => EventManager.TriggerEvent(new AddAgentRequestEvent());
+        void RemoveRandomAgent() => EventManager.TriggerEvent(new RemoveAgentRequestEvent());
+        void ClearAllAgents() => EventManager.TriggerEvent(new ClearAllAgentsRequestEvent());
+        void SpeedUp() => EventManager.TriggerEvent(new IncreaseTimeScaleEvent());
+        void SpeedDown() => EventManager.TriggerEvent(new DecreaseTimeScaleEvent());
+        void Pause() => EventManager.TriggerEvent(new PauseGameEvent());
     }
 }

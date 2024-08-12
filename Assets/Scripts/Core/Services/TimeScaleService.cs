@@ -9,7 +9,7 @@ namespace Core.Services
         public void SetTimeScale(float timeScale)
         {
             Time.timeScale = timeScale;
-            EventManager.Instance.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
+            EventManager.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
         }
 
         public float GetTimeScale() => Time.timeScale;
@@ -17,13 +17,13 @@ namespace Core.Services
         public void IncreaseTimeScale(float timeScaleAdd)
         {
             Time.timeScale += timeScaleAdd;
-            EventManager.Instance.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
+            EventManager.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
         }
 
         public void DecreaseTimeScale(float timeScaleSubtract)
         {
             Time.timeScale -= timeScaleSubtract;
-            EventManager.Instance.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
+            EventManager.TriggerEvent(new TimeScaleChangedEvent(Time.timeScale));
         }
     }
 }

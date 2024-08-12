@@ -20,29 +20,29 @@ namespace Core.Services
         public AgentService()
         {
             spawnedAgentEventListener = new EventListener(OnAgentSpawned);
-            EventManager.Instance.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
+            EventManager.RegisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
         }
 
         ~AgentService()
         {
-            EventManager.Instance.UnregisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
+            EventManager.UnregisterListener<SpawnedAgentEvent>(spawnedAgentEventListener);
 
             spawnedAgentEventListener = null;
         }
 
         // METHODS
         [Button]
-        public void SpawnAgent() => EventManager.Instance.TriggerEvent(new SpawnAgentEvent());
+        public void SpawnAgent() => EventManager.TriggerEvent(new SpawnAgentEvent());
 
         [Button]
         public void ReleaseAgent(Guid agentGuid)
         {
             if (agents.Contains(agentGuid))
             {
-                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agentGuid));
+                EventManager.TriggerEvent(new ReleaseAgentEvent(agentGuid));
 
                 agents.Remove(agentGuid);
-                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+                EventManager.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
             }
         }
 
@@ -53,8 +53,8 @@ namespace Core.Services
             {
                 Guid randomAgent = agents.ElementAt(random.Next(agents.Count));
                 agents.Remove(randomAgent);
-                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(randomAgent));
-                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+                EventManager.TriggerEvent(new ReleaseAgentEvent(randomAgent));
+                EventManager.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
             }
         }
 
@@ -69,9 +69,9 @@ namespace Core.Services
         {
             while (agents.Count > 0)
             {
-                EventManager.Instance.TriggerEvent(new ReleaseAgentEvent(agents.Last.Value));
+                EventManager.TriggerEvent(new ReleaseAgentEvent(agents.Last.Value));
                 agents.RemoveLast();
-                EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+                EventManager.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
             }
         }
 
@@ -85,7 +85,7 @@ namespace Core.Services
             SpawnedAgentEvent spawnedAgentEvent = eventBase as SpawnedAgentEvent;
             RegisterAgent(spawnedAgentEvent.SpawnedAgent);
             
-            EventManager.Instance.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
+            EventManager.TriggerEvent(new AgentsCountChangedEvent(agents.Count));
         }
     }
 }
