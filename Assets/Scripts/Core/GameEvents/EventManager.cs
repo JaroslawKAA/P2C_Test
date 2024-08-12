@@ -2,55 +2,58 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour
+namespace Core.GameEvents
 {
-    static EventManager instance;
-    public static EventManager Instance
+    public class EventManager : MonoBehaviour
     {
-        get
+        static EventManager instance;
+        public static EventManager Instance
         {
-            if (instance == null)
+            get
             {
-                instance = FindObjectOfType<EventManager>();
                 if (instance == null)
                 {
-                    GameObject obj = new GameObject("EventManager");
-                    instance = obj.AddComponent<EventManager>();
+                    instance = FindObjectOfType<EventManager>();
+                    if (instance == null)
+                    {
+                        GameObject obj = new GameObject("EventManager");
+                        instance = obj.AddComponent<EventManager>();
+                    }
                 }
+                return instance;
             }
-            return instance;
         }
-    }
     
-    Dictionary<Type, List<EventListener>> eventListeners = new();
+        Dictionary<Type, List<EventListener>> eventListeners = new();
 
-    public void RegisterListener<T>(EventListener listener) where T : EventBase
-    {
-        Type eventType = typeof(T);
-        if (!eventListeners.ContainsKey(eventType))
+        public void RegisterListener<T>(EventListener listener) where T : EventBase
         {
-            eventListeners[eventType] = new List<EventListener>();
-        }
-        eventListeners[eventType].Add(listener);
-    }
-
-    public void UnregisterListener<T>(EventListener listener) where T : EventBase
-    {
-        Type eventType = typeof(T);
-        if (eventListeners.ContainsKey(eventType))
-        {
-            eventListeners[eventType].Remove(listener);
-        }
-    }
-
-    public void TriggerEvent<T>(T eventInstance) where T : EventBase
-    {
-        Type eventType = typeof(T);
-        if (eventListeners.ContainsKey(eventType))
-        {
-            foreach (EventListener listener in eventListeners[eventType])
+            Type eventType = typeof(T);
+            if (!eventListeners.ContainsKey(eventType))
             {
-                listener.OnEvent(eventInstance);
+                eventListeners[eventType] = new List<EventListener>();
+            }
+            eventListeners[eventType].Add(listener);
+        }
+
+        public void UnregisterListener<T>(EventListener listener) where T : EventBase
+        {
+            Type eventType = typeof(T);
+            if (eventListeners.ContainsKey(eventType))
+            {
+                eventListeners[eventType].Remove(listener);
+            }
+        }
+
+        public void TriggerEvent<T>(T eventInstance) where T : EventBase
+        {
+            Type eventType = typeof(T);
+            if (eventListeners.ContainsKey(eventType))
+            {
+                foreach (EventListener listener in eventListeners[eventType])
+                {
+                    listener.OnEvent(eventInstance);
+                }
             }
         }
     }

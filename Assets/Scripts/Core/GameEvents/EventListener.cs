@@ -1,10 +1,13 @@
 using System;
 
-public class EventListener
+namespace Core.GameEvents
 {
-    Action<EventBase> onEventInvoked;
+    public class EventListener
+    {
+        Action<EventBase> onEventInvoked;
 
-    public EventListener(Action<EventBase> onEventInvoked) => this.onEventInvoked = onEventInvoked;
+        public EventListener(Action<EventBase> onEventInvoked) => this.onEventInvoked = onEventInvoked;
 
-    public virtual void OnEvent(EventBase eventInstance) => onEventInvoked?.Invoke(eventInstance);
+        public virtual void OnEvent(EventBase eventInstance) => onEventInvoked?.Invoke(eventInstance);
+    }
 }

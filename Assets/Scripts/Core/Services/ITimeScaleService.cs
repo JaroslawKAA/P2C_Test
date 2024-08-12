@@ -1,5 +1,10 @@
-public interface ITimeScaleService
+namespace Core.Services
 {
-    void SetTimeScale(float timeScale);
-    float GetTimeScale();
+    public interface ITimeScaleService
+    {
+        void SetTimeScale(float timeScale);
+        float GetTimeScale();
+        void IncreaseTimeScale(float timeScaleAdd);
+        void DecreaseTimeScale(float timeScaleSubtract);
+    }
 }

@@ -1,4 +1,7 @@
-public interface ITickService
+namespace Core.Services
 {
-    void Tick();
+    public interface ITickService
+    {
+        void Tick();
+    }
 }

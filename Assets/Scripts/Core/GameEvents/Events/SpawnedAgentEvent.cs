@@ -1,11 +1,14 @@
 using System;
 
-public class SpawnedAgentEvent : EventBase
+namespace Core.GameEvents.Events
 {
-    public Guid SpawnedAgent { get; private set; }
-
-    public SpawnedAgentEvent(Guid spawnedAgent)
+    public class SpawnedAgentEvent : EventBase
     {
-        SpawnedAgent = spawnedAgent;
+        public Guid SpawnedAgent { get; private set; }
+
+        public SpawnedAgentEvent(Guid spawnedAgent)
+        {
+            SpawnedAgent = spawnedAgent;
+        }
     }
 }

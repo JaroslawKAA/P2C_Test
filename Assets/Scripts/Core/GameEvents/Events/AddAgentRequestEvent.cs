@@ -1,3 +1,6 @@
-public class AddAgentRequestEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class AddAgentRequestEvent : EventBase
+    {
+    }
 }

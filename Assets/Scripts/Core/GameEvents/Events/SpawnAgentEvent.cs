@@ -1,4 +1,7 @@
 
-public class SpawnAgentEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class SpawnAgentEvent : EventBase
+    {
+    }
 }

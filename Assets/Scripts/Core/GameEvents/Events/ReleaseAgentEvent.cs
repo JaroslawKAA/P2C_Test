@@ -1,11 +1,14 @@
 using System;
 
-public class ReleaseAgentEvent : EventBase
+namespace Core.GameEvents.Events
 {
-    public Guid ReleasedAgent { get; private set; }
-
-    public ReleaseAgentEvent(Guid releasedAgent)
+    public class ReleaseAgentEvent : EventBase
     {
-        ReleasedAgent = releasedAgent;
+        public Guid ReleasedAgent { get; private set; }
+
+        public ReleaseAgentEvent(Guid releasedAgent)
+        {
+            ReleasedAgent = releasedAgent;
+        }
     }
 }

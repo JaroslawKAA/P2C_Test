@@ -1,3 +1,6 @@
-public class PauseGameEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class PauseGameEvent : EventBase
+    {
+    }
 }

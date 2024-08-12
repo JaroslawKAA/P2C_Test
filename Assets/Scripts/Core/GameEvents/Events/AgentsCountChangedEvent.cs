@@ -1,9 +1,12 @@
-public class AgentsCountChangedEvent : EventBase
+namespace Core.GameEvents.Events
 {
-    public int AgentsCount { get; private set; }
-
-    public AgentsCountChangedEvent(int agentsCount)
+    public class AgentsCountChangedEvent : EventBase
     {
-        AgentsCount = agentsCount;
+        public int AgentsCount { get; private set; }
+
+        public AgentsCountChangedEvent(int agentsCount)
+        {
+            AgentsCount = agentsCount;
+        }
     }
 }

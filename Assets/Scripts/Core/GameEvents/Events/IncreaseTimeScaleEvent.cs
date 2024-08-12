@@ -1,3 +1,6 @@
-public class IncreaseTimeScaleEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class IncreaseTimeScaleEvent : EventBase
+    {
+    }
 }

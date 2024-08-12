@@ -1,4 +1,7 @@
-public class RemoveAgentRequestEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class RemoveAgentRequestEvent : EventBase
+    {
     
+    }
 }

@@ -1,3 +1,6 @@
-public class ClearAllAgentsRequestEvent : EventBase
+namespace Core.GameEvents.Events
 {
+    public class ClearAllAgentsRequestEvent : EventBase
+    {
+    }
 }
