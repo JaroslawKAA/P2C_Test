@@ -7,7 +7,7 @@ namespace Agents
     [CreateAssetMenu(fileName = "AgentConfig", menuName = "Configs")]
     public class AgentConfig : GlobalConfig<AgentConfig>
     {
-        public string reachedDestinationMessage = "Agent <GUID> arrived";
+        public string reachedDestinationMessage = "Agent GUID arrived";
         
         public float walkingSpeed = 1f;
         public float minDistanceToWalk = 2f;

@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Agents.Services;
 using Core.GameEvents;
 using Core.GameEvents.Events;
@@ -16,6 +17,8 @@ namespace Agents.States
         Vector3 destinationPoint;
         Tweener movingTweener;
         
+        string messageGuidPattern = "GUID";
+        
         public WalkState(StateMachineBase stateMachineBase, MonoBehaviour context, ILevelPointGenerator levelPointGenerator)
             : base(stateMachineBase, context)
         {
@@ -32,21 +35,26 @@ namespace Agents.States
 
             float scaledSpeed = distanceToWalk / agentConfig.walkingSpeed;
             movingTweener = agentStateMachine.CachedTransform.DOMove(destinationPoint, scaledSpeed);
-            movingTweener.onComplete += ToIdle;
-            movingTweener.onComplete += TriggerReachedDestinationEvent;
+            movingTweener.onComplete += OnReachedDestination;
+        }
+
+        void OnReachedDestination()
+        {
+            TriggerReachedDestinationEvent();
+            ToIdle();
         }
 
         void TriggerReachedDestinationEvent()
         {
-            movingTweener.onComplete -= TriggerReachedDestinationEvent;
-            string agentMessage = agentConfig.reachedDestinationMessage.Replace("<GUID>", 
-                agentStateMachine.Owner.GUID.ToString(), StringComparison.CurrentCulture);
+            string agentMessage = agentConfig.reachedDestinationMessage;
+            string stringGuid = agentStateMachine.Owner.GUID.ToString();
+            agentMessage = Regex.Replace(agentMessage, messageGuidPattern, stringGuid);
+
             EventManager.TriggerEvent(new AgentMessageEvent(agentMessage));
         }
 
         void ToIdle()
         {
-            movingTweener.onComplete -= ToIdle;
             agentStateMachine.TransitionTo(AgentStateMachine.State.Idle);
         }
 
