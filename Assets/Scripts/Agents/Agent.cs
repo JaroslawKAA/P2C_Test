@@ -1,4 +1,6 @@
 using System;
+using Agents.Services;
+using Agents.States;
 using Core.Patterns;
 using UnityEngine;
 
@@ -9,6 +11,8 @@ namespace Agents
         // PRIVATE
         Transform cachedTransform;
         GameObject cachedGameObject;
+
+        AgentStateMachine agentStateMachine;
     
         // PROPERTIES
         public Guid GUID { get; private set; }
@@ -20,6 +24,21 @@ namespace Agents
             cachedGameObject = gameObject;
         }
 
+        void OnEnable()
+        {
+            agentStateMachine?.TransitionTo(AgentStateMachine.State.Idle);
+        }
+
+        void Update()
+        {
+            agentStateMachine?.Update();
+        }
+
+        void OnDisable()
+        {
+            agentStateMachine?.TransitionTo(AgentStateMachine.State.None);
+        }
+
         void OnDestroy()
         {
             cachedTransform = null;
@@ -27,6 +46,11 @@ namespace Agents
         }
 
         // METHODS
+        public void InitiateStateMachine(ILevelPointGenerator levelPointGenerator)
+        {
+            agentStateMachine = new AgentStateMachine(this, levelPointGenerator);
+        }
+        
         public void OnInstantiated()
         {
             GUID = Guid.NewGuid();

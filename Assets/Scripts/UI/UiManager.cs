@@ -22,11 +22,12 @@ namespace UI
 
         [PropertySpace]
         [SerializeField] [Required] TMP_Text messagesText;
-    
+
         // PRIVATE
         EventListener agentsCountChangedEventListener;
         EventListener timeScaleChangedEventListener;
-    
+        EventListener agentReachedDestinationListener;
+
         // UNITY EVENTS
         void Awake()
         {
@@ -48,12 +49,20 @@ namespace UI
 
             timeScaleChangedEventListener = new EventListener(OnTimeScaleChanged);
             EventManager.RegisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
+
+            agentReachedDestinationListener = new EventListener(OnAgentReachedDestination);
+            EventManager.RegisterListener<AgentMessageEvent>(agentReachedDestinationListener);
         }
 
         void UnsubscribeGameEvents()
         {
             EventManager.UnregisterListener<AgentsCountChangedEvent>(agentsCountChangedEventListener);
             EventManager.UnregisterListener<TimeScaleChangedEvent>(timeScaleChangedEventListener);
+            EventManager.UnregisterListener<AgentMessageEvent>(agentReachedDestinationListener);
+
+            agentsCountChangedEventListener = null;
+            timeScaleChangedEventListener = null;
+            agentReachedDestinationListener = null;
         }
 
         void SubscribeButtons()
@@ -81,13 +90,19 @@ namespace UI
             AgentsCountChangedEvent agentsCountChangedEvent = eventBase as AgentsCountChangedEvent;
             agentsCountText.SetOutput(agentsCountChangedEvent.AgentsCount.ToString());
         }
-        
+
         void OnTimeScaleChanged(EventBase eventBase)
         {
             TimeScaleChangedEvent timeScaleChangedEvent = eventBase as TimeScaleChangedEvent;
             gameSpeedText.SetOutput(timeScaleChangedEvent.TimeScale.ToString());
         }
-
+        
+        void OnAgentReachedDestination(EventBase eventBase)
+        {
+            AgentMessageEvent agentMessageEvent = eventBase as AgentMessageEvent;
+            messagesText.text = agentMessageEvent.Message;
+        }
+        
         void AddAgent() => EventManager.TriggerEvent(new AddAgentRequestEvent());
         void RemoveRandomAgent() => EventManager.TriggerEvent(new RemoveAgentRequestEvent());
         void ClearAllAgents() => EventManager.TriggerEvent(new ClearAllAgentsRequestEvent());

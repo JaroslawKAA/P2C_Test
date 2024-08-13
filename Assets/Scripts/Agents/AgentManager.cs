@@ -21,8 +21,8 @@ namespace Agents
         [SerializeField] [Required] Agent agentPrefab;
 
         // PRIVATE
-        EventListener SpawnAgentEventListener;
-        EventListener ReleaseAgentEventListener;
+        EventListener spawnAgentEventListener;
+        EventListener releaseAgentEventListener;
 
         LinkedPool<IPoolObject> agentPool;
         Dictionary<Guid, IPoolObject> agentsInstances = new();
@@ -41,11 +41,11 @@ namespace Agents
 
             levelPointGenerator = new NavMeshLevelPointGenerator();
 
-            SpawnAgentEventListener = new EventListener(Spawn);
-            ReleaseAgentEventListener = new EventListener(OnAgentReleased);
+            spawnAgentEventListener = new EventListener(Spawn);
+            releaseAgentEventListener = new EventListener(OnAgentReleased);
 
-            EventManager.RegisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
-            EventManager.RegisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
+            EventManager.RegisterListener<SpawnAgentEvent>(spawnAgentEventListener);
+            EventManager.RegisterListener<ReleaseAgentEvent>(releaseAgentEventListener);
         }
 
         void OnDestroy()
@@ -53,11 +53,11 @@ namespace Agents
             agentPool.Clear();
             agentPool = null;
         
-            EventManager.UnregisterListener<SpawnAgentEvent>(SpawnAgentEventListener);
-            EventManager.UnregisterListener<ReleaseAgentEvent>(ReleaseAgentEventListener);
+            EventManager.UnregisterListener<SpawnAgentEvent>(spawnAgentEventListener);
+            EventManager.UnregisterListener<ReleaseAgentEvent>(releaseAgentEventListener);
 
-            SpawnAgentEventListener = null;
-            ReleaseAgentEventListener = null;
+            spawnAgentEventListener = null;
+            releaseAgentEventListener = null;
 
             cachedTransform = null;
         }
@@ -83,8 +83,9 @@ namespace Agents
 
         IPoolObject OnPoolSpawn()
         {
-            IPoolObject agentInstance = Instantiate(agentPrefab);
+            Agent agentInstance = Instantiate(agentPrefab);
             agentInstance.OnInstantiated();
+            agentInstance.InitiateStateMachine(levelPointGenerator);
             agentsInstances.Add(agentInstance.GUID, agentInstance);
             return agentInstance;
         }

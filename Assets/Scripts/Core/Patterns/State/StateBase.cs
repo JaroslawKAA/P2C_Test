@@ -1,11 +1,11 @@
 
 using UnityEngine;
 
-public class StateBase
+public abstract class StateBase
 {
     protected StateMachineBase stateMachineBase;
     protected MonoBehaviour context;
-    
+
     protected StateBase(StateMachineBase stateMachineBase, MonoBehaviour context)
     {
         this.stateMachineBase = stateMachineBase;
