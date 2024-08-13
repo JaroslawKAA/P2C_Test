@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27175ec305df1c34cb95f6bf0aa4b992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentPositionDistance: 20
   agentPrefab: {fileID: 5789652196647719539, guid: 7a953f48080e20b44ac93961d7a27d9a,
     type: 3}

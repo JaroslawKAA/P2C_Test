@@ -32,7 +32,12 @@ namespace Core.Services
             }
         }
 
-        public void Tick() => EventManager.TriggerEvent(new TickEvent());
+        public void Tick()
+        {
+            Debug.Log("Tick");
+            EventManager.TriggerEvent(new TickEvent());
+        }
+
         public void SetTickDelay(float tickDelay) => this.tickDelay = tickDelay;
     }
 }

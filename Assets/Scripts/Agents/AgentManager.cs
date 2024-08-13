@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
+using Agents.Services;
 using Core.GameEvents;
 using Core.GameEvents.Events;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 namespace Agents
 {
     public class AgentManager : MonoBehaviour
     {
         // SERIALIZED
+        [Title("Config")]
+        [SerializeField] float agentPositionDistance = 10f;
+        
         [Title("Depend")]
         [SerializeField] [Required] Agent agentPrefab;
 
@@ -23,6 +28,8 @@ namespace Agents
 
         Transform cachedTransform;
 
+        ILevelPointGenerator levelPointGenerator;
+
 
         // UNITY EVENTS
         void Awake()
@@ -30,6 +37,8 @@ namespace Agents
             cachedTransform = transform;
         
             agentPool = new LinkedPool<Agent>(createFunc: Pool_Spawn, actionOnGet: Pool_OnGet, actionOnRelease: Pool_OnRelease);
+
+            levelPointGenerator = new NavMeshLevelPointGenerator();
 
             SpawnAgentEventListener = new EventListener(Spawn);
             ReleaseAgentEventListener = new EventListener(OnAgentReleased);
@@ -57,6 +66,11 @@ namespace Agents
         void Spawn(EventBase eventBase)
         {
             Agent agent = agentPool.Get();
+            
+            Vector3 randomPosition = levelPointGenerator.GetRandomPoint(cachedTransform.position, agentPositionDistance);
+            Quaternion randomRotation = Quaternion.Euler(0f, Random.Range(1f, 360f), 0f);
+            agent.SetTransform(randomPosition, randomRotation);
+            
             EventManager.TriggerEvent(new SpawnedAgentEvent(agent.GUID));
         }
 
