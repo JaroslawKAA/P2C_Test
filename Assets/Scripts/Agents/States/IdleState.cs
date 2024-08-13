@@ -4,21 +4,21 @@ namespace Agents.States
 {
     public class IdleState : AgentStateBase
     {
-        float waitingMinTime = .5f;
-        float waitingMaxTime = 2f;
-
+        AgentConfig agentConfig;
+        
         float timer = 0f;
         float timeToWait;
         
         public IdleState(StateMachineBase stateMachineBase, MonoBehaviour context) : base(stateMachineBase, context)
         {
+            agentConfig = AgentConfig.Instance;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
             timer = 0f;
-            timeToWait = Random.Range(waitingMinTime, waitingMaxTime);
+            timeToWait = Random.Range(agentConfig.waitingMinTime, agentConfig.waitingMaxTime);
         }
 
         public override void OnUpdate()

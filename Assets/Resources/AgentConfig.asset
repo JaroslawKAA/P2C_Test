@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005bb18f95c0e9147a349cf30a3ef57a, type: 3}
   m_Name: AgentConfig
   m_EditorClassIdentifier: 
+  reachedDestinationMessage: Agent GUID arrived
   walkingSpeed: 2
   minDistanceToWalk: 2
   maxDistanceToWalk: 10
+  waitingMinTime: 0.25
+  waitingMaxTime: 1

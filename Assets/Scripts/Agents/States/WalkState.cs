@@ -1,6 +1,6 @@
-using System;
 using System.Text.RegularExpressions;
 using Agents.Services;
+using Core.Extensions;
 using Core.GameEvents;
 using Core.GameEvents.Events;
 using DG.Tweening;
@@ -14,7 +14,6 @@ namespace Agents.States
         readonly AgentConfig agentConfig;
         readonly ILevelPointGenerator levelPointGenerator;
 
-        Vector3 destinationPoint;
         Tweener movingTweener;
         
         string messageGuidPattern = "GUID";
@@ -29,13 +28,33 @@ namespace Agents.States
         public override void OnEnter()
         {
             base.OnEnter();
-            float distanceToWalk = Random.Range(agentConfig.minDistanceToWalk, agentConfig.maxDistanceToWalk);
-            destinationPoint = levelPointGenerator.GetRandomPoint(startPoint: agentStateMachine.CachedTransform.position,
-                distanceFromStartPoint: distanceToWalk);
+            Vector3 destinationPoint = GetDestinationPoint();
 
-            float scaledSpeed = distanceToWalk / agentConfig.walkingSpeed;
-            movingTweener = agentStateMachine.CachedTransform.DOMove(destinationPoint, scaledSpeed);
+            float distanceToWalk = Vector3.Distance(agentStateMachine.CachedTransform.position, destinationPoint);
+            LookToDestination(destinationPoint);
+            MoveTo(distanceToWalk, destinationPoint);
+        }
+
+        void MoveTo(float distanceToWalk, Vector3 destinationPoint)
+        {
+            float moveDuration = distanceToWalk / agentConfig.walkingSpeed;
+            movingTweener = agentStateMachine.CachedTransform.DOMove(destinationPoint, moveDuration);
+            movingTweener.SetEase(Ease.Linear);
             movingTweener.onComplete += OnReachedDestination;
+        }
+
+        Vector3 GetDestinationPoint()
+        {
+            float distanceToWalk = Random.Range(agentConfig.minDistanceToWalk, agentConfig.maxDistanceToWalk);
+            return levelPointGenerator.GetRandomPoint(startPoint: agentStateMachine.CachedTransform.position,
+                distanceFromStartPoint: distanceToWalk);
+        }
+
+        void LookToDestination(Vector3 destinationPoint)
+        {
+            Vector3 directionToDestinationPoint = destinationPoint.WithY(0) - agentStateMachine.CachedTransform.position.WithY(0);
+            Quaternion lookAtDestinationPointRotation = Quaternion.LookRotation(directionToDestinationPoint, Vector3.up);
+            agentStateMachine.Owner.SetTransform(agentStateMachine.CachedTransform.position, lookAtDestinationPointRotation);
         }
 
         void OnReachedDestination()
