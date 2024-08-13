@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Agents.Services;
 using Core.GameEvents;
 using Core.GameEvents.Events;
+using Core.Patterns;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -23,8 +24,8 @@ namespace Agents
         EventListener SpawnAgentEventListener;
         EventListener ReleaseAgentEventListener;
 
-        LinkedPool<Agent> agentPool;
-        Dictionary<Guid, Agent> agentsInstances = new();
+        LinkedPool<IPoolObject> agentPool;
+        Dictionary<Guid, IPoolObject> agentsInstances = new();
 
         Transform cachedTransform;
 
@@ -36,7 +37,7 @@ namespace Agents
         {
             cachedTransform = transform;
         
-            agentPool = new LinkedPool<Agent>(createFunc: Pool_Spawn, actionOnGet: Pool_OnGet, actionOnRelease: Pool_OnRelease);
+            agentPool = new LinkedPool<IPoolObject>(createFunc: OnPoolSpawn, actionOnGet: OnPoolGet, actionOnRelease: OnPoolRelease);
 
             levelPointGenerator = new NavMeshLevelPointGenerator();
 
@@ -65,7 +66,7 @@ namespace Agents
         // METHODS
         void Spawn(EventBase eventBase)
         {
-            Agent agent = agentPool.Get();
+            IPoolObject agent = agentPool.Get();
             
             Vector3 randomPosition = levelPointGenerator.GetRandomPoint(cachedTransform.position, agentPositionDistance);
             Quaternion randomRotation = Quaternion.Euler(0f, Random.Range(1f, 360f), 0f);
@@ -80,23 +81,23 @@ namespace Agents
             agentPool.Release(agentsInstances[releaseAgentEvent.ReleasedAgent]);
         }
 
-        Agent Pool_Spawn()
+        IPoolObject OnPoolSpawn()
         {
-            Agent agentInstance = Instantiate(agentPrefab);
+            IPoolObject agentInstance = Instantiate(agentPrefab);
             agentInstance.OnInstantiated();
             agentsInstances.Add(agentInstance.GUID, agentInstance);
             return agentInstance;
         }
 
-        void Pool_OnGet(Agent agent)
+        void OnPoolGet(IPoolObject agent)
         {
-            agent.OnGet();
+            agent.OnGetFromPool();
             agent.SetParent(cachedTransform);
         }
 
-        void Pool_OnRelease(Agent agent)
+        void OnPoolRelease(IPoolObject agent)
         {
-            agent.OnRelease();
+            agent.OnReleaseToPool();
             agent.SetParent(cachedTransform);
         }
     }

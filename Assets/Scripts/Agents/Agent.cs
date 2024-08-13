@@ -1,15 +1,19 @@
 using System;
+using Core.Patterns;
 using UnityEngine;
 
 namespace Agents
 {
-    public class Agent : MonoBehaviour
+    public class Agent : MonoBehaviour, IPoolObject
     {
+        // PRIVATE
         Transform cachedTransform;
         GameObject cachedGameObject;
     
+        // PROPERTIES
         public Guid GUID { get; private set; }
 
+        // UNITY EVENTS
         void Awake()
         {
             cachedTransform = transform;
@@ -22,32 +26,32 @@ namespace Agents
             cachedGameObject = null;
         }
 
+        // METHODS
         public void OnInstantiated()
         {
             GUID = Guid.NewGuid();
             cachedGameObject.SetActive(false);
         }
 
-        public void OnGet()
+        public void OnGetFromPool()
         {
             cachedGameObject.SetActive(true);
         }
 
-        public void OnRelease()
+        public void OnReleaseToPool()
         {
             cachedGameObject.SetActive(false);
-        }
-
-        public void SetTransform(Vector3 position, Quaternion rotation, Transform parent = null)
-        {
-            cachedTransform.position = position;
-            cachedTransform.rotation = rotation;
-            if(parent) SetParent(parent);
         }
 
         public void SetParent(Transform parent)
         {
             cachedTransform.SetParent(parent, worldPositionStays: true);
+        }
+
+        public void SetTransform(Vector3 position, Quaternion rotation)
+        {
+            cachedTransform.position = position;
+            cachedTransform.rotation = rotation;
         }
     }
 }
